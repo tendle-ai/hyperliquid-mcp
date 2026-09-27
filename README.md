@@ -83,35 +83,19 @@ should use unfunded wallets and read-only operations unless funds are authorized
 - `src/hosted_hyperliquid/`: server/auth, tool schemas and instructions, domain operations, upstream validation and SDK session cleanup.
 - `src/hosted_hyperliquid/bridge.py`: deposits and withdrawals; `account_reads.py` includes account-specific trading capacity.
 - `tests/`: behavior and integration tests, including uncertainty and credential handling.
-- `deploy/`: the production nginx/systemd configuration, public metadata/icon and approved ingress SSH host key.
+- `assets/`: public connector metadata and the 512×512 PNG icon.
 
-## Production
+## Running your own instance
 
-Origin `146.190.56.100`: `/opt/hosted-hyperliquid-mcp`, unprivileged
-`tendle-gateway` systemd service, loopback port 8080. Shared ingress
-`143.198.154.237` terminates public TLS and verifies origin TLS on 8443. The origin
-only accepts ingress traffic. Use **one server process**: signer locks are in-process.
+Use HTTPS for public access and keep credentials out of logs. Run one application
+process: signer coordination is in-process. Multiple workers require shared signer
+coordination to prevent nonce collisions. Install runtime dependencies with
+`uv sync --frozen --no-dev` and configure the variables in `.env.example`.
 
-Back up source/config outside the application directory. Install locked dependencies
-with `uv sync --frozen --no-dev`; replace source cleanly, restart `tendle-gateway`,
-and verify health, tool discovery and relevant reads. For proxy changes, run
-`nginx -t` before reloading; preserve TLS files and unrelated ingress routes.
-Roll back source/config and restart if verification fails. Never log credentials.
+`assets/connector.json` describes the Tendle-hosted connector; `assets/icon.png` is
+its 512×512 public icon. Deployment infrastructure is maintained separately.
 
-`deploy/tendle-ingress.conf` captures the connector location blocks from the ingress
-host's `/etc/nginx/sites-available/studio-domain`. Use it inside the existing
-`tendle.ai` HTTPS server block, replacing matching locations rather than duplicating
-them. Keep the site's other routes and public TLS configuration intact. It requires
-`/etc/nginx/tendle-connector-origin.crt` and the existing HTTP-context rate-limit zone:
-`limit_req_zone $binary_remote_addr zone=tendle_connector:10m rate=10r/s;` (currently
-in `/etc/nginx/conf.d/tendle-connectors-limits.conf`). The captured singular
-`/connector/hyperliquid` route is legacy ingress configuration; the origin returns
-404 for it. The supported URLs are listed above. Run `nginx -t` before reload.
-
-
-`deploy/connector.json` is public JSON metadata. Owner-provided contact/legal fields
-and payments=false are published there; the icon is a 512×512 PNG. This is not a
-submission to Meta. Metadata/icon updates need no MCP service restart.
+## Attribution
 
 Adapted from [edkdev/hyperliquid-mcp](https://github.com/edkdev/hyperliquid-mcp), commit
 `7f3965182f50f28f7a22cbc8f93e5bf0a0439f14`. MIT attribution is retained in LICENSE.
