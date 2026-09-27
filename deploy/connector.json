@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "connector_name": "Hyperliquid",
+  "product_website": "https://tendle.ai/connectors/hyperliquid",
+  "description": "Connect an AI assistant to Hyperliquid for market discovery, account reads, trading, and collateral management.",
+  "example_prompts": [
+    "Find Anthropic and OpenAI markets and show their collateral and leverage limits.",
+    "List markets categorized as pre-IPO across all deployments.",
+    "Show my available, held, and total balances and my current account mode.",
+    "Show my positions and open orders on the xyz deployment.",
+    "Check my current trading capacity for a specific market."
+  ],
+  "connector_icon": "https://tendle.ai/connectors/hyperliquid/mcp/icon",
+  "payments": false,
+  "your_name": "Nathaniel Angafor",
+  "work_email": "nate@tendle.ai",
+  "support_email_or_url": "hello@tendle.ai",
+  "privacy_policy": "https://tendle.ai/privacy",
+  "terms_of_service": "https://tendle.ai/tos",
+  "anything_else": "Supports default perpetuals, builder perpetuals and spot. Financial actions can use real funds. Availability and execution are subject to Hyperliquid rules and account permissions.",
+  "technical_specs": {
+    "protocol": "MCP",
+    "transport": "streamable-http",
+    "endpoint": "https://tendle.ai/connectors/hyperliquid/mcp",
+    "docs_url": "https://tendle.ai/connectors/hyperliquid/mcp/docs",
+    "health_endpoint": "https://tendle.ai/connectors/hyperliquid/healthz",
+    "network": "mainnet",
+    "authentication": {
+      "type": "bearer",
+      "credential": "EVM private key or 12/24-word English BIP-39 seed phrase",
+      "configuration": "Configure Authorization: Bearer <credential> in the client secure credential settings; never put credentials in prompts or URLs. With a phrase, call hyperliquid_list_wallet_accounts, ask the user to choose, and pass the returned index/address as walletAccount on every other authenticated tool. No account is selected automatically. English BIP-39 without an extra passphrase; private-key credentials require no selection.",
+      "public_operations": [
+        "initialize",
+        "tools/list",
+        "hyperliquid_get_docs",
+        "hyperliquid_generate_wallet"
+      ],
+      "note": "Other tools require a valid private key or seed phrase. Invalid supplied credentials are rejected even on public operations."
+    },
+    "discovery": "Use tools/list for current tools and input schemas; call hyperliquid_get_docs for current usage guidance."
+  },
+  "company": "Tendle",
+  "developer": "Nathaniel Angafor"
+}

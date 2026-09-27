@@ -1,0 +1,35 @@
+[project]
+name = "hyperliquid-mcp"
+version = "1.9.0"
+description = "Hyperliquid MCP over HTTP with request-scoped wallet authentication"
+requires-python = ">=3.11"
+dependencies = [
+  "mcp==2.2.0",
+  "hyperliquid-python-sdk==0.24.0",
+  "eth-account==0.13.7",
+  "eth-utils==5.3.1",
+  "requests==2.34.2",
+  "jsonschema==4.26.0",
+  "starlette==1.9.0",
+  "uvicorn==0.54.0",
+]
+
+[project.scripts]
+hyperliquid-mcp = "hosted_hyperliquid.server:main"
+
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hosted_hyperliquid"]
+
+[dependency-groups]
+dev = ["pytest==9.1.1", "ruff==0.16.9", "httpx2==2.13.1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-p no:cacheprovider"
+
+[tool.ruff]
+line-length = 110
