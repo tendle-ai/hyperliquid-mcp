@@ -7,12 +7,17 @@ management and bridge submissions. One current contract; no legacy aliases.
 
 ## Connect
 
-- MCP: https://tendle.ai/connectors/hyperliquid/mcp
+- MCP: https://hyperliquid.tendle.ai/mcp
 - Product page: https://tendle.ai/connectors/hyperliquid
 - Connector dictionary: https://tendle.ai/connectors/hyperliquid/manifest.json
-- Icon: https://tendle.ai/connectors/hyperliquid/mcp/icon
-- Docs: https://tendle.ai/connectors/hyperliquid/mcp/docs
-- Health: https://tendle.ai/connectors/hyperliquid/healthz
+- Icon: https://hyperliquid.tendle.ai/mcp/icon
+- Docs: https://hyperliquid.tendle.ai/mcp/docs
+- Health: https://hyperliquid.tendle.ai/healthz
+
+The connector uses a dedicated hostname; its product page and manifest remain
+in the Tendle catalog. Configure the MCP URL and permitted credential host as
+`hyperliquid.tendle.ai`. Existing clients must update their endpoint and secure
+credential binding; changing the catalog URL alone does not migrate a connection.
 - Hosted network: **mainnet**. Transport: **Streamable HTTP**.
 
 Initialization, tool discovery, `hyperliquid_get_docs` and

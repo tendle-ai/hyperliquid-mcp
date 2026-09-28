@@ -185,7 +185,7 @@ GROUPS = {
 
 
 def build_docs(network, public_url):
-    base = public_url.rstrip("/") + "/connectors/hyperliquid"
+    base = public_url.rstrip("/")
     parts = [
         f"# Hyperliquid MCP documentation\n\nVersion: {VERSION}\nNetwork: {network}\nTransport: Streamable HTTP\nMCP: {base}/mcp\nDocs: {base}/mcp/docs\nMetadata: {base}/manifest.json\n\nSupports default perps, builder/HIP-3 perps and spot. Financial tools can move real funds on mainnet.",
         GUIDE.strip(),

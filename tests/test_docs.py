@@ -27,7 +27,10 @@ def test_public_docs_match_http_exactly(client, fake_sdk):
 def test_docs_network_and_url(network):
     text = build_docs(network, "https://example.com")
     assert f"Network: {network}" in text
-    assert "https://example.com/connectors/hyperliquid/mcp/docs" in text
+    assert "MCP: https://example.com/mcp\n" in text
+    assert "Docs: https://example.com/mcp/docs\n" in text
+    assert "Metadata: https://example.com/manifest.json" in text
+    assert "/connectors/hyperliquid" not in text
 
 
 def test_reference_covers_each_tool_once_and_preserves_schema_rules():

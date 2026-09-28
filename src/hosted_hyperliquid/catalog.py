@@ -122,7 +122,7 @@ def tool(name, description, schema, *, write=False, external=True):
 CATALOG = [
     tool(
         "get_docs",
-        "Read the complete plain-text documentation: setup, wallet selection, workflows, errors, limitations and current tool schemas. Same text as /connectors/hyperliquid/mcp/docs. Public; no credentials required.",
+        "Read the complete plain-text documentation: setup, wallet selection, workflows, errors, limitations and current tool schemas. Same text as /mcp/docs. Public; no credentials required.",
         obj({}),
         external=False,
     ),

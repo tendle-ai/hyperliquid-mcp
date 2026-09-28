@@ -10,7 +10,7 @@
     "Show my positions and open orders on the xyz deployment.",
     "Check my current trading capacity for a specific market."
   ],
-  "connector_icon": "https://tendle.ai/connectors/hyperliquid/mcp/icon",
+  "connector_icon": "https://hyperliquid.tendle.ai/mcp/icon",
   "payments": false,
   "your_name": "Nathaniel Angafor",
   "work_email": "nate@tendle.ai",
@@ -21,9 +21,9 @@
   "technical_specs": {
     "protocol": "MCP",
     "transport": "streamable-http",
-    "endpoint": "https://tendle.ai/connectors/hyperliquid/mcp",
-    "docs_url": "https://tendle.ai/connectors/hyperliquid/mcp/docs",
-    "health_endpoint": "https://tendle.ai/connectors/hyperliquid/healthz",
+    "endpoint": "https://hyperliquid.tendle.ai/mcp",
+    "docs_url": "https://hyperliquid.tendle.ai/mcp/docs",
+    "health_endpoint": "https://hyperliquid.tendle.ai/healthz",
     "network": "mainnet",
     "authentication": {
       "type": "bearer",
