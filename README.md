@@ -11,20 +11,11 @@
   <a href="https://tendle.ai">Built by Tendle</a>
 </p>
 
-> [!TIP]
-> **Agent quickstart** · Paste this into your agent:
->
-> Add Hyperliquid from https://hyperliquid.tendle.ai
+## Agent quickstart
 
-| Connection | |
-| :--- | :--- |
-| MCP endpoint | `https://hyperliquid.tendle.ai/mcp` |
-| Transport | Streamable HTTP |
-| Hosted network | **Mainnet** |
-| Authentication | Wallet private key or seed phrase, stored in your client's secure credentials |
-
-Name the connector **Hyperliquid**. If your client needs a provider ID, use
-`hyperliquid`. Have the agent read `hyperliquid_get_docs` before using tools.
+```text
+Add Hyperliquid from https://hyperliquid.tendle.ai
+```
 
 ## Try asking
 
@@ -87,6 +78,8 @@ as well as their MCP URL. Muse requires secure credential re-entry for that chan
 </details>
 
 ## Before trading
+
+The hosted connector uses **mainnet**.
 
 - **Query fresh state.** Total balance is not available collateral. Account responses
   separate held, unheld, and available-after-maintenance amounts; unknown availability
