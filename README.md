@@ -1,121 +1,147 @@
-# Hyperliquid MCP
+<p align="center">
+  <img src="assets/icon.png" width="80" height="80" alt="Hyperliquid" />
+</p>
+
+<h1 align="center">Hyperliquid MCP</h1>
+<p align="center">Markets, balances, and trading for your AI agent.</p>
+<p align="center">
+  <a href="https://hyperliquid.tendle.ai/mcp/docs">Docs</a> ·
+  <a href="https://tendle.ai/connectors/hyperliquid/manifest.json">Manifest</a> ·
+  <a href="https://tendle.ai/connectors/hyperliquid">Connector page</a> ·
+  <a href="https://tendle.ai">Built by Tendle</a>
+</p>
 
 > [!TIP]
-> **Agent quickstart** · Copy this instruction into your agent:
+> **Agent quickstart** · Paste this into your agent:
 >
-> **Add Hyperliquid from https://hyperliquid.tendle.ai**
->
-> MCP endpoint: `https://hyperliquid.tendle.ai/mcp` · [Setup docs](https://hyperliquid.tendle.ai/mcp/docs)
->
-> Name the connector **Hyperliquid**. If your client asks for a provider ID, use `hyperliquid` without a `tendle-` prefix.
-> Configure the wallet credential through your client’s secure credential settings. Read `hyperliquid_get_docs` before using tools. This endpoint uses mainnet.
+> Add Hyperliquid from https://hyperliquid.tendle.ai
 
-Hosted Hyperliquid connector by Tendle. Repository: [tendleai/hyperliquid-mcp](https://github.com/tendleai/hyperliquid-mcp).
+| Connection | |
+| :--- | :--- |
+| MCP endpoint | `https://hyperliquid.tendle.ai/mcp` |
+| Transport | Streamable HTTP |
+| Hosted network | **Mainnet** |
+| Authentication | Wallet private key or seed phrase, stored in your client's secure credentials |
 
-30 tools for default perps, builder/HIP-3 perps, spot, account reads, collateral
-management and bridge submissions. One current contract; no legacy aliases.
+Name the connector **Hyperliquid**. If your client needs a provider ID, use
+`hyperliquid`. Have the agent read `hyperliquid_get_docs` before using tools.
 
-## Connect
+## Try asking
 
-- MCP: https://hyperliquid.tendle.ai/mcp
-- Product page: https://tendle.ai/connectors/hyperliquid
-- Connector dictionary: https://tendle.ai/connectors/hyperliquid/manifest.json
-- Icon: https://hyperliquid.tendle.ai/mcp/icon
-- Docs: https://hyperliquid.tendle.ai/mcp/docs
-- Health: https://hyperliquid.tendle.ai/healthz
+- “Find Anthropic and OpenAI markets. Show their collateral and leverage limits.”
+- “How much of my balance is available, and how much is held?”
+- “Show my positions and open orders on the xyz deployment.”
+- “Check my trading capacity before placing an order.”
 
-The connector uses a dedicated hostname; its product page and manifest remain
-in the Tendle catalog. Configure the MCP URL and permitted credential host as
-`hyperliquid.tendle.ai`. Existing clients must update their endpoint and secure
-credential binding; changing the catalog URL alone does not migrate a connection.
-Muse binds saved credentials to the registered host, so existing connections need
-secure credential re-entry through its reconnect flow. The old MCP URL remains
-available during that migration. Never paste wallet credentials into chat.
-- Hosted network: **mainnet**. Transport: **Streamable HTTP**.
+## What it covers
 
-Initialization, tool discovery, `hyperliquid_get_docs` and
-`hyperliquid_generate_wallet` are public. Other tools require
-`Authorization: Bearer <credential>` through secure client credentials.
-Invalid supplied credentials are rejected even on public operations. Keys are
-request-scoped and never persisted by the server. Generated keys must be saved
-securely by the client, never echoed into chat or logs.
+Discover and trade default perpetuals, builder/HIP-3 perpetuals, and spot markets.
+Search uses live market names and upstream keywords, including pre-IPO categories.
 
-`tools/list` supplies current schemas. `get_docs` returns the same plain text as the public docs endpoint, including
-usage guidance and a tool reference generated from the current schemas. Refresh both after updates. These are the source
-of detailed usage guidance; this README covers development and operations.
+| Workflow | Tools |
+| :--- | :--- |
+| Wallet setup | `generate_wallet`, `list_wallet_accounts` |
+| Markets | `list_markets`, `market_details`, `get_order_book`, `get_historical_funding`, `get_candles` |
+| Account | `get_account`, `get_orders`, `get_order_status`, `get_user_fills`, `get_user_funding`, `get_ledger_updates`, `get_portfolio` |
+| Orders | `place_orders`, `modify_orders`, `cancel_orders`, `cancel_all_orders`, `place_bracket_order`, `close_position`, `schedule_cancel` |
+| Margin & collateral | `update_leverage`, `update_isolated_margin`, `set_account_mode`, `transfer_collateral` |
+| Bridge | `deposit`, `withdraw` |
+| Vaults | `list_vaults`, `vault_details` |
+| Reference | `get_docs` |
 
-## Tools
+All 30 tool names begin with `hyperliquid_`. [Live docs](https://hyperliquid.tendle.ai/mcp/docs)
+contain the current inputs and behavior; `tools/list` supplies the schemas.
 
-Names below have the `hyperliquid_` prefix.
+## Connect a wallet
 
-| Area | Tools |
-| --- | --- |
-| Setup | get_docs, generate_wallet, list_wallet_accounts |
-| Account | get_account, get_orders, get_order_status, get_user_fills, get_user_funding, get_ledger_updates, get_portfolio |
-| Markets | list_markets, market_details, get_order_book, get_historical_funding, get_candles |
-| Trading | place_orders, modify_orders, cancel_orders, cancel_all_orders, place_bracket_order, close_position, update_leverage, update_isolated_margin, schedule_cancel |
-| Collateral | set_account_mode, transfer_collateral |
-| Bridge | deposit, withdraw |
-| Vaults | list_vaults, vault_details |
+Initialization, tool discovery, `hyperliquid_get_docs`, and
+`hyperliquid_generate_wallet` work without credentials. Other tools require
+`Authorization: Bearer <credential>`. Use the client's secure credential settings,
+not prompts or URLs. An invalid supplied credential is rejected even on public tools.
 
-Market execution uses exact discovered IDs. Discovery enriches names, keywords and
-categories from live Hyperliquid annotations, including `category: "preipo"`.
-No manual alias list or cross-request market/balance cache is maintained.
+- **Private key:** 64 hexadecimal characters, optionally prefixed with `0x`.
+- **Seed phrase:** a valid English 12- or 24-word BIP-39 phrase. The agent lists
+  accounts with `hyperliquid_list_wallet_accounts`, asks you to choose, and passes
+  the selected `{index,address}` as `walletAccount` on subsequent authenticated calls.
 
-Account responses distinguish available-after-maintenance, held, total and unheld
-balances. Missing availability is null; totals are not spending power. Positions
-cover one deployment. Use account-specific market details for trading capacity.
+Keys are request-scoped and are not persisted by the server. Wallet generation
+returns an address, private key, and seed phrase. **Both secrets are visible to the
+tool caller** and must be saved securely by the client.
 
-Transfers support spot, default perps and builder deployments within the same wallet.
-Account-mode changes support Unified and Standard. Both require owner keys without
-account/vault overrides, as do deposits and withdrawals. Optional
-`X-Hyperliquid-Account-Address` / `X-Hyperliquid-Vault-Address` headers select existing
-exchange-authorized trading contexts; `userAddress` is a read-only subject selector.
+<details>
+<summary>Account selection and advanced credentials</summary>
 
-Writes can have partial or unknown outcomes. Inspect exchange results and reconcile
-with fresh reads; never repeat a write to poll. Legacy bridge deposits require at
-least 5 USDC and Arbitrum ETH gas. Arbitrum confirmation is not Hyperliquid credit;
-withdrawal submission is not destination receipt. CCTP is not implemented.
+Phrase discovery uses `m/44'/60'/0'/0/index`, ten accounts per page, with no extra
+passphrase. Addresses may be unused. Other derivation paths or passphrases require
+an individual private key. Normalize phrase whitespace to single spaces in headers.
+The pinned eth-account library marks its HD-wallet API as unaudited.
 
-## Develop
+`X-Hyperliquid-Account-Address` and `X-Hyperliquid-Vault-Address` select existing
+exchange-authorized contexts. `userAddress` selects the subject of a read, not a signer.
+Collateral transfers, account-mode changes, deposits, and withdrawals require
+owner keys without account/vault overrides.
+
+Clients migrating from the old Tendle endpoint must update their credential host
+as well as their MCP URL. Muse requires secure credential re-entry for that change.
+
+</details>
+
+## Before trading
+
+- **Query fresh state.** Total balance is not available collateral. Account responses
+  separate held, unheld, and available-after-maintenance amounts; unknown availability
+  is `null`. Positions cover the selected deployment.
+- **Use the discovered market ID.** Check `market_details` with account information
+  for that market's trading capacity. Similar symbols can identify different assets.
+- **Verify writes.** Partial or uncertain outcomes need fresh reads, not a repeated
+  order. A submitted withdrawal is not proof of receipt.
+- **Bridge requirements:** legacy deposits need at least 5 USDC and Arbitrum ETH for
+  gas. Arbitrum confirmation does not prove Hyperliquid credit. CCTP is not implemented.
+
+## Run locally
+
+Requires **Python 3.11+** and [uv](https://docs.astral.sh/uv/).
 
 ```sh
 uv sync --frozen
 uv run hyperliquid-mcp
+```
+
+The local default is **testnet**, at `http://127.0.0.1:8001/mcp`.
+See [.env.example](.env.example) for settings and export them in your shell;
+the application does not automatically load `.env`. Network selection is server-wide.
+
+```sh
 uv run pytest -q
 uv run ruff check --no-cache .
 uv run ruff format --check --no-cache .
 ```
 
-Python 3.11+. `pyproject.toml` declares dependencies; `uv.lock` locks them.
-The local default is testnet at `http://127.0.0.1:8001/mcp`. `.env.example` documents
-settings; export them in your shell (the server does not load a .env automatically).
-Public deployments require HTTPS. Network selection is server-wide.
+Tests intercept exchange HTTP calls, including real SDK signing. They do not prove
+live transaction settlement. Muse installation and authenticated reads have also
+been verified against the hosted service.
 
-Tests block exchange network calls. Wire tests exercise real SDK signing with
-intercepted HTTP. Mocked transaction tests do not prove live settlement. Live checks
-should use unfunded wallets and read-only operations unless funds are authorized.
+<details>
+<summary>Self-hosting and repository layout</summary>
 
-## Layout
+Use HTTPS, keep credentials out of logs, and install runtime dependencies with
+`uv sync --frozen --no-dev`. Run one application process: signer coordination is
+in-process, so multiple workers need shared coordination to prevent nonce collisions.
 
-- `src/hosted_hyperliquid/`: server/auth, tool schemas and instructions, domain operations, upstream validation and SDK session cleanup.
-- `src/hosted_hyperliquid/bridge.py`: deposits and withdrawals; `account_reads.py` includes account-specific trading capacity.
-- `tests/`: behavior and integration tests, including uncertainty and credential handling.
-- `assets/`: public connector metadata and the 512×512 PNG icon.
+| Path | Contents |
+| :--- | :--- |
+| `src/hosted_hyperliquid/` | MCP server, authentication, tool schemas, and exchange operations |
+| `tests/` | Behavior and integration tests |
+| `assets/` | Connector manifest and icon |
+| `pyproject.toml` / `uv.lock` | Package configuration and locked dependencies |
 
-## Running your own instance
+The manifest describes the Tendle-hosted service. Update its URLs for your own
+instance. Deployment infrastructure is maintained separately.
 
-Use HTTPS for public access and keep credentials out of logs. Run one application
-process: signer coordination is in-process. Multiple workers require shared signer
-coordination to prevent nonce collisions. Install runtime dependencies with
-`uv sync --frozen --no-dev` and configure the variables in `.env.example`.
+</details>
 
-`assets/connector.json` describes the Tendle-hosted connector; `assets/icon.png` is
-its 512×512 public icon. Deployment infrastructure is maintained separately.
+## Credits
 
-## Attribution
-
-Adapted from [edkdev/hyperliquid-mcp](https://github.com/edkdev/hyperliquid-mcp), commit
-`7f3965182f50f28f7a22cbc8f93e5bf0a0439f14`. MIT attribution is retained in LICENSE.
-
-Credentials accept a 64-hex private key (optional `0x`) or a valid English 12/24-word BIP-39 phrase. Normalize phrase whitespace to single spaces in headers. With a phrase, call `hyperliquid_list_wallet_accounts`, let the user choose, then pass its `{index,address}` as `walletAccount` on every other authenticated tool. No default selection or server-side selection state. Discovery pages through `m/44'/60'/0'/0/index` (10 per page), with no extra passphrase; addresses may be unused. Private-key credentials need no selection. Confirm the returned account address; accounts under other derivation paths or passphrases require their private key. Wallet generation returns `address`, `privateKey`, and `seedPhrase` for the same account. Both secrets are visible to the tool caller; the server does not persist them. HD derivation uses the pinned eth-account library’s explicitly unaudited HD-wallet API.
+Adapted from [edkdev/hyperliquid-mcp](https://github.com/edkdev/hyperliquid-mcp)
+at commit `7f3965182f50f28f7a22cbc8f93e5bf0a0439f14`.
+[MIT license](LICENSE). [Support](mailto:hello@tendle.ai).
