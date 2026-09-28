@@ -1,5 +1,15 @@
 # Hyperliquid MCP
 
+> [!TIP]
+> **Agent quickstart** · Copy this instruction into your agent:
+>
+> **Add Hyperliquid from https://hyperliquid.tendle.ai**
+>
+> MCP endpoint: `https://hyperliquid.tendle.ai/mcp` · [Setup docs](https://hyperliquid.tendle.ai/mcp/docs)
+>
+> Name the connector **Hyperliquid**. If your client asks for a provider ID, use `hyperliquid` without a `tendle-` prefix.
+> Configure the wallet credential through your client’s secure credential settings. Read `hyperliquid_get_docs` before using tools. This endpoint uses mainnet.
+
 Hosted Hyperliquid connector by Tendle. Repository: [tendleai/hyperliquid-mcp](https://github.com/tendleai/hyperliquid-mcp).
 
 30 tools for default perps, builder/HIP-3 perps, spot, account reads, collateral
