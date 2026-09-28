@@ -18,6 +18,9 @@ The connector uses a dedicated hostname; its product page and manifest remain
 in the Tendle catalog. Configure the MCP URL and permitted credential host as
 `hyperliquid.tendle.ai`. Existing clients must update their endpoint and secure
 credential binding; changing the catalog URL alone does not migrate a connection.
+Muse binds saved credentials to the registered host, so existing connections need
+secure credential re-entry through its reconnect flow. The old MCP URL remains
+available during that migration. Never paste wallet credentials into chat.
 - Hosted network: **mainnet**. Transport: **Streamable HTTP**.
 
 Initialization, tool discovery, `hyperliquid_get_docs` and
